@@ -35,7 +35,7 @@
         "branch-name-to-commit-message.commitMessageConvention": {
           "type": "string",
           "default": "{{0}}({{1}}): {{{2}}}",
-          "description": "How your commit message should looks like {{index of regex group}}"
+          "description": "How your commit message should looks like. exp: {{i}} for index of regex group without change or {{{i}}} for index of regex group with no case "
         }
       }
     }

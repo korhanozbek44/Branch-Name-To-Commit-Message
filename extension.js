@@ -21,6 +21,10 @@ function activate(context) {
 			}
 			const gitExtension = gitExt.exports;
             const git = gitExtension.getAPI(1);
+			if (git.repositories.length === 0) {
+				vscode.window.showErrorMessage('Git repository not found');
+				return;
+			}
             const repository = git.repositories[0];
             if (!repository.state.HEAD) {
                 if (tryCount === 2) {
@@ -53,7 +57,7 @@ function activate(context) {
             }
 
 			repository.inputBox.value = commitMessage;
-            vscode.window.showInformationMessage('Commit message generated.');
+            vscode.window.showInformationMessage('DONE. Commit message generated.');
         } catch (err) {
             console.log(err);
         }
