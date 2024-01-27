@@ -1,23 +1,25 @@
 const vscode = require('vscode');
+const changeCase = require('case-anything');
 
 const isExtensionInstalled = (extensionName) => {
     const extension = vscode.extensions.getExtension(extensionName);
     return !!extension;
 };
 
-function activate(context) {
-    console.log('Congratulations, your extension "branch-name-to-commit-message" is now active!');
 
+function activate(context) {
     const callback = (tryCount) => {
-        if (!isExtensionInstalled('vscode.git')) {
-            vscode.window.showErrorMessage('Git extension is not installed');
-        }
         try {
             const configuration = vscode.workspace.getConfiguration('branch-name-to-commit-message');
             const branchNameResolverRegexText = configuration.get('branchNameResolverRegex');
             const commitMessageConvention = configuration.get('commitMessageConvention');
 
-            const gitExtension = vscode.extensions.getExtension('vscode.git').exports;
+            const gitExt = vscode.extensions.getExtension('vscode.git');
+			if (!isExtensionInstalled('vscode.git') || !gitExt) {
+				vscode.window.showErrorMessage('Git extension is not installed');
+				return;
+			}
+			const gitExtension = gitExt.exports;
             const git = gitExtension.getAPI(1);
             const repository = git.repositories[0];
             if (!repository.state.HEAD) {
@@ -33,21 +35,30 @@ function activate(context) {
             const branchNameResolverRegex = new RegExp(branchNameResolverRegexText);
             const brachNameMatchArray = branchNameResolverRegex.exec(currentBranchName);
 
-            const commitConventionParser = /{{(\d+)}}/g;
             let commitMessage = commitMessageConvention;
 
+			const changeCaseCommitConventionParser = /{{{(\d+)}}}/g;
+            let matchChangeCase;
+            while ((matchChangeCase = changeCaseCommitConventionParser.exec(commitMessage)) !== null) {
+				const relatedText = brachNameMatchArray[parseInt(matchChangeCase[1]) + 1];
+                commitMessage = commitMessage.replace(matchChangeCase[0], changeCase.spaceCase(relatedText, {keepSpecialCharacters: false}));
+                changeCaseCommitConventionParser.lastIndex = matchChangeCase.index + 1;
+            }
+
+			const commitConventionParser = /{{(\d+)}}/g;
             let match;
             while ((match = commitConventionParser.exec(commitMessage)) !== null) {
                 commitMessage = commitMessage.replace(match[0], brachNameMatchArray[parseInt(match[1]) + 1]);
                 commitConventionParser.lastIndex = match.index + 1;
             }
 
-            vscode.window.showInformationMessage(commitMessage);
+			repository.inputBox.value = commitMessage;
+            vscode.window.showInformationMessage('Commit message generated.');
         } catch (err) {
             console.log(err);
         }
     };
-    let panelButtonDisposable = vscode.commands.registerCommand('branch-name-to-commit-message.fill-commit-box', callback);
+    const panelButtonDisposable = vscode.commands.registerCommand('branch-name-to-commit-message.fill-commit-box', callback);
 
     context.subscriptions.push(panelButtonDisposable);
 }

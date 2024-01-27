@@ -17,22 +17,24 @@
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "branch-name-to-commit-message.fill-commit-box",
-      "title": "Branch To Commit"
-    }],
+    "commands": [
+      {
+        "command": "branch-name-to-commit-message.fill-commit-box",
+        "title": "Branch To Commit"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Branch Name To Commit Message",
       "properties": {
         "branch-name-to-commit-message.branchNameResolverRegex": {
           "type": "string",
-          "default": "(.+)\/(.+)\/(.+)",
+          "default": "(.+)/(.+)/(.+)",
           "description": "Add brach name to commit message conversion regex"
         },
         "branch-name-to-commit-message.commitMessageConvention": {
           "type": "string",
-          "default": "{{0}}({{1}}): {{2}}",
+          "default": "{{0}}({{1}}): {{{2}}}",
           "description": "How your commit message should looks like {{index of regex group}}"
         }
       }
@@ -44,15 +46,18 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3",
+    "@types/vscode": "^1.85.0",
     "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8"
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
   },
   "extensionDependencies": [
     "vscode.git"
-  ]
+  ],
+  "dependencies": {
+    "case-anything": "^2.1.13"
+  }
 }
