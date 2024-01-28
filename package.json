@@ -3,6 +3,9 @@
   "displayName": "Branch Name To Commit Message",
   "description": "",
   "version": "0.0.1",
+  "repository": {
+    "url": "https://github.com/korhanozbek44/Vscode-Branch-Name-To-Commit-Message"
+  },
   "author": {
     "name": "Korhan ÖZBEK",
     "email": "korhanozbek44@gmail.com",
