@@ -3,6 +3,8 @@
 
 You can easy write VSCode's active branch name to commit message box with format as you wish by one command.
 
+[View In VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=KorhanOzbek.branch-name-to-commit-message)
+
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/korhanozbek44/Branch-Name-To-Commit-Message)
